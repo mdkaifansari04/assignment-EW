@@ -16,8 +16,6 @@ pnpm install
 bun install
 ```
 
-````
-
 Then, run the development server:
 
 ```bash
@@ -68,4 +66,3 @@ NEXT_PUBLIC_HOST_URL=https://reqres.in/api
 ## License
 
 This project is licensed under the MIT License.
-````
