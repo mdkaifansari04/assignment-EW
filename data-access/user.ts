@@ -4,8 +4,8 @@ import axios from "axios";
 
 const userApi = axios.create({ baseURL: `${process.env.NEXT_PUBLIC_HOST_URL}/users` });
 
-export const getUser = async () => {
-  const { data } = await userApi.get<UserApiResponse>("/");
+export const getUser = async (pageNumber: number) => {
+  const { data } = await userApi.get<UserApiResponse>(`?page=${pageNumber}`);
   return data;
 };
 

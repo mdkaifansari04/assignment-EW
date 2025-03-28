@@ -27,11 +27,12 @@ export default function UsersPage() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [editUser, setEditUser] = useState<User | null>(null);
   const [deleteUser, setDeleteUser] = useState<User | null>(null);
-  const { data, error, isError, isPending: isFethingUser, isFetched } = useGetUser();
-  const { mutate: updateUser, isPending: isUpdating } = useUpdateUser();
+  const { data, error, isError, isPending: isFethingUser, isFetched, refetch } = useGetUser(currentPage);
   useEffect(() => {
     if (isFetched && data && !error) {
       setUsers(data.data);
+      setFilteredUsers(data.data);
+      setTotalPages(data.total_pages);
     }
     if (users.length > 0 && searchQuery) {
       const filtered = users.filter((user) => user.first_name.toLowerCase().includes(searchQuery.toLowerCase()) || user.last_name.toLowerCase().includes(searchQuery.toLowerCase()) || user.email.toLowerCase().includes(searchQuery.toLowerCase()));
@@ -64,6 +65,11 @@ export default function UsersPage() {
     setDeleteUser(null);
   };
 
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    setUsers([]);
+    refetch();
+  };
   return (
     <AuthProvider>
       <div className="container mx-auto py-8 px-4">
@@ -100,19 +106,33 @@ export default function UsersPage() {
             <Pagination>
               <PaginationContent>
                 <PaginationItem>
-                  <PaginationPrevious onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"} />
+                  <PaginationPrevious
+                    onClick={() => {
+                      setCurrentPage((prev) => Math.max(prev - 1, 1));
+                      setUsers([]);
+                      refetch();
+                    }}
+                    className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                  />
                 </PaginationItem>
 
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                   <PaginationItem key={page}>
-                    <PaginationLink isActive={page === currentPage} onClick={() => setCurrentPage(page)}>
+                    <PaginationLink isActive={page === currentPage} onClick={() => handlePageChange(page)}>
                       {page}
                     </PaginationLink>
                   </PaginationItem>
                 ))}
 
                 <PaginationItem>
-                  <PaginationNext onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))} className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"} />
+                  <PaginationNext
+                    onClick={() => {
+                      setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+                      setUsers([]);
+                      refetch();
+                    }}
+                    className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                  />
                 </PaginationItem>
               </PaginationContent>
             </Pagination>
