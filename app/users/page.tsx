@@ -11,7 +11,6 @@ import { UserDeleteDialog } from "@/components/user-delete-dialog";
 import { UserEditDialog } from "@/components/user-edit-dialog";
 import { useUpdateUser } from "@/hooks/mutation";
 import { useGetUser } from "@/hooks/queries";
-import { useToast } from "@/hooks/use-toast";
 import { accessTokenStorage } from "@/lib/token-storage";
 import AuthProvider from "@/provider/auth-provider";
 import { User } from "@/types";
