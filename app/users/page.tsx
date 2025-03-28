@@ -128,7 +128,7 @@ export default function UsersPage() {
   );
 }
 
-export const NoUserFoundView = () => {
+const NoUserFoundView = () => {
   return (
     <div className="text-center py-8">
       <p className="text-muted-foreground">No users found</p>
