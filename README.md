@@ -1,4 +1,3 @@
-````md
 # Assignment
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
@@ -16,6 +15,7 @@ pnpm install
 # or
 bun install
 ```
+
 ````
 
 Then, run the development server:
@@ -68,3 +68,4 @@ NEXT_PUBLIC_HOST_URL=https://reqres.in/api
 ## License
 
 This project is licensed under the MIT License.
+````
