@@ -3,27 +3,24 @@
 import UserCard from "@/components/data-display/user-card";
 import { UserCardPendingView } from "@/components/shared/pending-view";
 import QueryWrapper from "@/components/shared/query-wrapper";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { UserDeleteDialog } from "@/components/user-delete-dialog";
 import { UserEditDialog } from "@/components/user-edit-dialog";
-import { useDeleteUser, useUpdateUser } from "@/hooks/mutation";
+import { useUpdateUser } from "@/hooks/mutation";
 import { useGetUser } from "@/hooks/queries";
 import { useToast } from "@/hooks/use-toast";
 import { accessTokenStorage } from "@/lib/token-storage";
-import { getErrorMessage } from "@/lib/utils";
 import AuthProvider from "@/provider/auth-provider";
 import { User } from "@/types";
-import { Edit, LogOut, Search, Trash2 } from "lucide-react";
+import { LogOut, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function UsersPage() {
   const router = useRouter();
-  const { toast } = useToast();
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
