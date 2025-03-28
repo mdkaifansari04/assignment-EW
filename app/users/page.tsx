@@ -15,6 +15,7 @@ import { useGetUser } from "@/hooks/queries";
 import { useToast } from "@/hooks/use-toast";
 import { accessTokenStorage } from "@/lib/token-storage";
 import { getErrorMessage } from "@/lib/utils";
+import AuthProvider from "@/provider/auth-provider";
 import { User } from "@/types";
 import { Edit, LogOut, Search, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -68,63 +69,65 @@ export default function UsersPage() {
   };
 
   return (
-    <div className="container mx-auto py-8 px-4">
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-2xl">User Management</CardTitle>
-          <Button variant="outline" onClick={handleLogout}>
-            <LogOut className="h-4 w-4 mr-2" />
-            Logout
-          </Button>
-        </CardHeader>
-        <CardContent>
-          <div className="relative mb-6">
-            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input placeholder="Search users..." className="pl-8" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
-          </div>
-          <QueryWrapper
-            data={data}
-            error={error}
-            isError={isError}
-            isPending={isFethingUser}
-            pendingView={<UserCardPendingView />}
-            emptyDataView={<NoUserFoundView />}
-            view={
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {filteredUsers.map((user, k) => (
-                  <UserCard key={`user-card-${k}}`} user={user} onEdit={handleEditUser} onDelete={handleDeleteUser} />
-                ))}
-              </div>
-            }
-          />
-        </CardContent>
-        <CardFooter className="flex justify-center">
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"} />
-              </PaginationItem>
-
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                <PaginationItem key={page}>
-                  <PaginationLink isActive={page === currentPage} onClick={() => setCurrentPage(page)}>
-                    {page}
-                  </PaginationLink>
+    <AuthProvider>
+      <div className="container mx-auto py-8 px-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle className="text-2xl">User Management</CardTitle>
+            <Button variant="outline" onClick={handleLogout}>
+              <LogOut className="h-4 w-4 mr-2" />
+              Logout
+            </Button>
+          </CardHeader>
+          <CardContent>
+            <div className="relative mb-6">
+              <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input placeholder="Search users..." className="pl-8" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+            </div>
+            <QueryWrapper
+              data={data}
+              error={error}
+              isError={isError}
+              isPending={isFethingUser}
+              pendingView={<UserCardPendingView />}
+              emptyDataView={<NoUserFoundView />}
+              view={
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {filteredUsers.map((user, k) => (
+                    <UserCard key={`user-card-${k}}`} user={user} onEdit={handleEditUser} onDelete={handleDeleteUser} />
+                  ))}
+                </div>
+              }
+            />
+          </CardContent>
+          <CardFooter className="flex justify-center">
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"} />
                 </PaginationItem>
-              ))}
 
-              <PaginationItem>
-                <PaginationNext onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))} className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"} />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        </CardFooter>
-      </Card>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                  <PaginationItem key={page}>
+                    <PaginationLink isActive={page === currentPage} onClick={() => setCurrentPage(page)}>
+                      {page}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
 
-      {editUser && <UserEditDialog user={editUser} onClose={() => setEditUser(null)} onUpdate={handleUserUpdated} />}
+                <PaginationItem>
+                  <PaginationNext onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))} className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"} />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </CardFooter>
+        </Card>
 
-      {deleteUser && <UserDeleteDialog user={deleteUser} onClose={() => setDeleteUser(null)} onDelete={handleUserDeleted} />}
-    </div>
+        {editUser && <UserEditDialog user={editUser} onClose={() => setEditUser(null)} onUpdate={handleUserUpdated} />}
+
+        {deleteUser && <UserDeleteDialog user={deleteUser} onClose={() => setDeleteUser(null)} onDelete={handleUserDeleted} />}
+      </div>
+    </AuthProvider>
   );
 }
 

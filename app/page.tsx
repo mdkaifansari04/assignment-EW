@@ -1,17 +1,12 @@
-"use client";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { accessTokenStorage } from "@/lib/token-storage";
+import AuthProvider from "@/provider/auth-provider";
+import { LoaderCircle } from "lucide-react";
 
 export default function Home() {
-  const router = useRouter();
-  useEffect(() => {
-    if (!accessTokenStorage.get()) {
-      router.push("/login");
-    } else {
-      router.push("/users");
-    }
-  }, [router]);
-
-  return null;
+  return (
+    <AuthProvider>
+      <main className="w-full h-screen flex justify-center items-center">
+        <LoaderCircle className="w-5 h-5 animate-spin" />
+      </main>
+    </AuthProvider>
+  );
 }
